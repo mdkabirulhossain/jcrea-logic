@@ -1,39 +1,73 @@
 "use client";
 
 import { Product } from "@/types";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addItem } from "@/store/slices/cart-slice";
+import { toast } from "sonner";
 
 export function ProductCard({ product }: { product: Product }) {
   const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+
+  // Find quantity already in cart (string comparison for safe matching)
+  const itemInCart = cartItems.find((i) => String(i.id) === String(product.id));
+  const qtyInCart = itemInCart ? itemInCart.qty : 0;
+
+  // Calculate dynamic remaining stock
+  const remainingStock = Math.max(0, product.stock - qtyInCart);
+
+  const handleAddToCart = () => {
+    if (remainingStock <= 0) return;
+    dispatch(addItem(product));
+    toast.success(`${product.name} added to cart`);
+  };
 
   return (
-    <div className="border rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
+    <div className="flex flex-col justify-between border rounded-2xl p-5 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all">
       <div>
-        <div className="h-44 w-full bg-zinc-100 dark:bg-zinc-800 rounded-xl mb-4 flex items-center justify-center text-4xl">
+        <div className="h-44 w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-xl mb-4 flex items-center justify-center text-4xl">
           📦
         </div>
-        <span className="text-xs uppercase tracking-wider text-purple-600 font-semibold">
-          {product.category}
-        </span>
-        <h3 className="font-bold text-lg mt-1 text-zinc-900 dark:text-zinc-100">
+
+        <div className="flex items-center justify-between mb-2 gap-2">
+          <span className="text-xs uppercase tracking-wider text-purple-600 dark:text-purple-400 font-bold">
+            {product.category || "General"}
+          </span>
+
+          {/* Dynamic Stock Badges */}
+          {remainingStock === 0 && (
+            <span className="inline-flex items-center gap-1.5 bg-red-100 dark:bg-red-950/80 text-red-700 dark:text-red-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-red-200 dark:border-red-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+              Out of Stock
+            </span>
+          )}
+
+          {remainingStock > 0 && remainingStock < 5 && (
+            <span className="inline-flex items-center gap-1.5 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-amber-200 dark:border-amber-800">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              Low Stock ({remainingStock})
+            </span>
+          )}
+        </div>
+
+        <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100">
           {product.name}
         </h3>
-        <p className="text-xl font-extrabold mt-2 text-zinc-900 dark:text-zinc-100">
-          ${product.price}
+        <p className="text-xl font-extrabold mt-1 text-purple-700 dark:text-purple-400">
+          ${product.price.toFixed(2)}
         </p>
       </div>
 
       <button
-        onClick={() => dispatch(addItem(product))}
-        disabled={product.stock === 0}
-        className={`mt-4 w-full py-2.5 px-4 rounded-xl text-sm font-semibold transition-colors ${
-          product.stock === 0
-            ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 cursor-not-allowed"
-            : "bg-purple-600 text-white hover:bg-purple-700 active:scale-[0.99]"
+        disabled={remainingStock === 0}
+        onClick={handleAddToCart}
+        className={`mt-5 w-full py-2.5 px-4 rounded-xl font-semibold text-sm transition-all duration-200 shadow-sm active:scale-[0.98] ${
+          remainingStock === 0
+            ? "bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-500 cursor-not-allowed shadow-none"
+            : "bg-purple-600 hover:bg-purple-700 text-white shadow-purple-500/10 hover:shadow-purple-500/20"
         }`}
       >
-        {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+        {remainingStock === 0 ? "Out of Stock" : "Add to Cart"}
       </button>
     </div>
   );
