@@ -10,7 +10,7 @@ export default async function HomePage() {
     <main className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <Navbar />
       <div className="max-w-7xl mx-auto px-6 py-16 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4 bg-linear-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
           Welcome to JCrea Logic Store
         </h1>
         <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto mb-8">
