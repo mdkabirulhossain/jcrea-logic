@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cart-store";
 import { toast } from "sonner";
-import CartDrawer from "./CartDrawer";
+import dynamic from "next/dynamic";
+
+const CartDrawer = dynamic(() => import("./CartDrawer"), {
+  ssr: false,
+});
 
 export default function Navbar() {
   const { data: session } = useSession();
@@ -16,7 +20,8 @@ export default function Navbar() {
       <nav className="sticky top-0 z-40 flex items-center justify-between px-6 py-4 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm">
         <a href="/dashboard" className="flex items-center gap-3">
           <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            JCrea Logic
+            <span className="sm:hidden">JL</span>
+            <span className="hidden sm:inline">JCrea Logic</span>
           </span>
         </a>
 

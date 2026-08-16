@@ -1,7 +1,11 @@
 import Navbar from "@/components/Navbar";
 import { Toaster } from "sonner";
+import { auth } from "@/auth";
+import Link from "next/link";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const session = await auth();
+
   return (
     <main className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
       <Navbar />
@@ -13,18 +17,21 @@ export default function HomePage() {
           Your premier destination for high-quality electronics and tech accessories.
         </p>
         <div className="flex justify-center gap-4">
-          <a
+          <Link
             href="/dashboard"
             className="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md transition-all"
           >
             Go to Dashboard ➔
-          </a>
-          <a
-            href="/login"
-            className="px-6 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-semibold border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
-          >
-            Login
-          </a>
+          </Link>
+
+          {!session?.user && (
+            <Link
+              href="/login"
+              className="px-6 py-3 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 font-semibold border border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
       <Toaster position="top-right" />
