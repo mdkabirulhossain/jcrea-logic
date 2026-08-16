@@ -13,8 +13,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Bonus: RBAC — hardcode/derive a role. Real apps would look this up in a DB.
-        token.role = user.email === "admin@example.com" ? "admin" : "manager";
+        // Bonus: RBAC — environment-driven role assignment
+        const adminEmail = process.env.ADMIN_EMAIL || "admin@example.com";
+        token.role = user.email === adminEmail ? "admin" : "manager";
       }
       return token;
     },

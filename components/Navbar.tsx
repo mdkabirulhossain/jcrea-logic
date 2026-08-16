@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/store/cart-store";
+import { toast } from "sonner";
 import CartDrawer from "./CartDrawer";
 
 export default function Navbar() {
@@ -19,7 +20,7 @@ export default function Navbar() {
           </span>
         </a>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 md:gap-4">
           {/* Cart Count Badge / Drawer Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
@@ -29,10 +30,14 @@ export default function Navbar() {
             <span>{count}</span>
           </button>
 
-          {/* Admin Badge */}
-          {session?.user?.role === "admin" && (
-            <span className="px-2.5 py-1 text-xs font-bold text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/50 rounded-md border border-purple-300 dark:border-purple-700">
-              Admin
+          {/* Role Badge (RBAC) */}
+          {session?.user?.role && (
+            <span className={`px-2.5 py-1 text-xs font-bold rounded-md border ${
+              session.user.role === "admin"
+                ? "text-purple-700 dark:text-purple-300 bg-purple-100 dark:bg-purple-900/50 border-purple-300 dark:border-purple-700"
+                : "text-zinc-700 dark:text-zinc-300 bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700"
+            }`}>
+              {session.user.role === "admin" ? "Admin" : "Manager"}
             </span>
           )}
 

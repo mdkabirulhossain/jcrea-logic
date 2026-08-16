@@ -3,9 +3,11 @@
 import { Product } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addItem } from "@/store/slices/cart-slice";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
 export function ProductCard({ product }: { product: Product }) {
+  const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
 
