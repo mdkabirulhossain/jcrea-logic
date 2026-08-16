@@ -7,7 +7,7 @@ const products = [
     category: "Laptops",
     price: 2499,
     stock: 8,
-    image: "/assets/images/macbook-pro-m2.jpg",
+    image: "/assets/images/macbook-pro-m2.webp",
   },
   {
     id: 2,

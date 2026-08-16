@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import CheckoutButton from "@/components/CheckoutButton";
 import EmptyState from "@/components/EmptyState";
@@ -40,8 +41,14 @@ export default function CartPage() {
                   className="flex items-center justify-between p-5 border rounded-2xl bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-sm"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl font-bold">
-                      📦
+                    <div className="relative h-14 w-14 rounded-xl bg-purple-100 dark:bg-purple-950/60 overflow-hidden shrink-0 flex items-center justify-center">
+                      <Image
+                        src={item.image || "/assets/images/placeholder.svg"}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        sizes="56px"
+                      />
                     </div>
                     <div>
                       <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-100">

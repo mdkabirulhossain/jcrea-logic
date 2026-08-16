@@ -1,15 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import { Product } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addItem } from "@/store/slices/cart-slice";
-import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 
 export function ProductCard({ product }: { product: Product }) {
-  const { data: session } = useSession();
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.items);
+  const [imgSrc, setImgSrc] = useState(product.image || "/assets/images/placeholder.svg");
 
   // Find quantity already in cart (string comparison for safe matching)
   const itemInCart = cartItems.find((i) => String(i.id) === String(product.id));
@@ -27,8 +28,15 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <div className="flex flex-col justify-between border rounded-2xl p-5 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all">
       <div>
-        <div className="h-44 w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-xl mb-4 flex items-center justify-center text-4xl">
-          📦
+        <div className="relative h-48 w-full bg-zinc-100 dark:bg-zinc-800/80 rounded-xl mb-4 overflow-hidden flex items-center justify-center">
+          <Image
+            src={imgSrc}
+            alt={product.name}
+            fill
+            onError={() => setImgSrc("/assets/images/placeholder.svg")}
+            className="object-cover transition-transform duration-300 hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
 
         <div className="flex items-center justify-between mb-2 gap-2">

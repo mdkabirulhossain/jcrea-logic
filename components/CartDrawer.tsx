@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { removeItem, clearCart } from "@/store/slices/cart-slice";
 import CheckoutButton from "./CheckoutButton";
@@ -27,9 +28,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         <div className="w-screen max-w-md bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col justify-between">
           {/* Header */}
           <div className="p-6 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between">
-            <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <h2 className="text-base sm:text-xl font-extrabold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5 sm:gap-2">
               <span>🛒 Shopping Cart</span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold">
+              <span className="text-[10px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold shrink-0">
                 {cartItems.reduce((acc, i) => acc + (i.qty ?? 1), 0)} items
               </span>
             </h2>
@@ -55,8 +56,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   className="flex items-center justify-between p-4 border rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border-zinc-200 dark:border-zinc-800"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-xl font-bold">
-                      📦
+                    <div className="relative h-12 w-12 rounded-xl bg-purple-100 dark:bg-purple-950/60 overflow-hidden shrink-0 flex items-center justify-center">
+                      <Image
+                        src={item.image || "/assets/images/placeholder.svg"}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
                     </div>
                     <div>
                       <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-100">
