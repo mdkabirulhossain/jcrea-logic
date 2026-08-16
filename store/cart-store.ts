@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { addItem, removeItem, clearCart, type CartItem } from "./slices/cart-slice";
-import type { Product } from "@/types";
+import type { Product } from "@/types/product";
 
 export * from "./index";
 export * from "./slices/cart-slice";

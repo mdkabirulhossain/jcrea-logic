@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Product } from "@/types";
+import { Product } from "@/types/product";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import ProductCard from "@/components/ProductCard";
 import Navbar from "@/components/Navbar";
@@ -17,14 +17,35 @@ export default function Dashboard() {
     try {
       const res = await fetch("/api/products");
       if (!res.ok) throw new Error();
-      setProducts(await res.json());
+      const data = await res.json();
+      setProducts(data);
+      setError(false);
     } catch {
       setError(true);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    let ignore = false;
+    async function loadData() {
+      try {
+        const res = await fetch("/api/products");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (!ignore) {
+          setProducts(data);
+          setError(false);
+        }
+      } catch {
+        if (!ignore) {
+          setError(true);
+        }
+      }
+    }
+    loadData();
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   return (
